@@ -8,8 +8,9 @@ import utils
 
 misc_blueprint = Blueprint( "misc_blueprint" , url_prefix="/" )
 
-@misc_blueprint.route( "/" )
-def home( request ):
+async def home( request ):
 	this = utils.get_server_context()
 	print( this.config )
 	return sanic_response.text( "you found the Fire Stick C2 Server !!\n" )
+
+misc_blueprint.add_route( home , "/" , methods=[ "GET" ] )
