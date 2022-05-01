@@ -47,11 +47,12 @@ async def play( request ):
 	previous_state = this.redis.get_state()
 	response = { "route": "/youtube/play" , "previous_state": previous_state , "result": "failed" }
 	if "url" in request.args:
+		adb_status = False
 		try:
 			response[ "url" ] = request.args[ "url" ][ 0 ]
 			adb = ADBWrapper( { "ip": this.config.adb.ip , "port": this.config.adb.port } )
 			adb.open_uri( response[ "url" ] )
-			response[ "adb_status" ] = adb.get_status()
+			adb_status = adb.get_status()
 			response[ "result" ] = "success"
 		except Exception as e:
 			this.log( stackprinter.format() )
@@ -59,7 +60,8 @@ async def play( request ):
 			new_state = {
 				"status": "youtube" ,
 				"url": response[ "url" ] ,
-				"time": utils.get_common_time_string( this.config.time_zone )
+				"time": utils.get_common_time_string( this.config.time_zone ) ,
+				"adb_status": adb_status
 			}
 			this.redis.set_state( new_state )
 			response[ "new_state" ] = new_state
