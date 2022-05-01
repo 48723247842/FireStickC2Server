@@ -51,7 +51,7 @@ async def play( request ):
 			response[ "url" ] = request.args[ "url" ][ 0 ]
 			adb = ADBWrapper( { "ip": this.config.adb.ip , "port": this.config.adb.port } )
 			adb.open_uri( response[ "url" ] )
-			# TODO : get adb status
+			response[ "adb_status" ] = adb.get_status()
 			response[ "result" ] = "success"
 		except Exception as e:
 			this.log( stackprinter.format() )

@@ -15,7 +15,7 @@ def get_json( url , params={} ):
 
 if __name__ == "__main__":
 	# config = utils.read_yaml( sys.argv[ 1 ] )
-	config = Box( utils.read_yaml( "../config.yaml" ) )
+	config = Box( utils.read_yaml( "config.yaml" ) )
 
 	# get_json( f"http://{config.sanic.host}:{config.sanic.port}/youtube/next" )
 	# get_json( f"http://{config.sanic.host}:{config.sanic.port}/youtube/previous" )
