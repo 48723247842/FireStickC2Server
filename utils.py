@@ -23,19 +23,6 @@ def setup_signal_handlers( function_pointer ):
 	signal.signal( signal.SIGTERM , function_pointer )
 	signal.signal( signal.SIGINT , function_pointer )
 
-def redis_connect( host , port , db , password ):
-	return redis.StrictRedis(
-		host=host ,
-		port=port ,
-		db=db ,
-		password=password ,
-		decode_responses=True
-	)
-
-def get_redis_log_date( as_timezone ):
-	now = datetime.datetime.now().astimezone( as_timezone )
-	return now.strftime( "%Y.%m.%d" ).upper()
-
 def get_common_time_string( as_timezone ):
 	now = datetime.datetime.now().astimezone( as_timezone )
 	milliseconds = round( now.microsecond / 1000.0 )

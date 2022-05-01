@@ -1,0 +1,10 @@
+sanic:
+  host: "0.0.0.0"
+  port: 9371
+redis:
+  db: 1
+  host: localhost
+  password: ""
+  port: 9379
+  prefix: "FSC2."
+time_zone: "US/Eastern"

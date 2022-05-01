@@ -13,4 +13,4 @@ async def home( request ):
 	print( this.config )
 	return sanic_response.text( "you found the Fire Stick C2 Server !!\n" )
 
-misc_blueprint.add_route( home , "/" , methods=[ "GET" ] )
+misc_blueprint.add_route( home , "/" , methods=[ "GET" ] , strict_slashes=False )
