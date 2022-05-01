@@ -24,8 +24,7 @@ class C2Server:
 			self.redis = RedisWrapper( self.config.redis )
 			print( self.config )
 		except Exception as e:
-			print( e )
-			# self.log( stackprinter.format() )
+			self.log( stackprinter.format() )
 			sys.exit( 1 )
 
 	def on_signal_interrupt( self , signal_number , signal ):
