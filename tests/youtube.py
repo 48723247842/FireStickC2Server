@@ -6,12 +6,13 @@ import requests
 sys.path.append( os.getcwd() + "/.." )
 import utils
 from box import Box
+from pprint import pprint
 
 def get_json( url , params={} ):
 	headers = { 'accept': 'application/json, text/plain, */*' }
 	response = requests.get( url , headers=headers , params=params )
 	response.raise_for_status()
-	print( response.json() )
+	pprint( response.json() )
 
 if __name__ == "__main__":
 	# config = utils.read_yaml( sys.argv[ 1 ] )
