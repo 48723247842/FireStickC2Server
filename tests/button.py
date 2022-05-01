@@ -7,7 +7,6 @@ sys.path.append( os.getcwd() + "/.." )
 import utils
 from box import Box
 
-
 def get_json( url , params={} ):
 	headers = { 'accept': 'application/json, text/plain, */*' }
 	response = requests.get( url , headers=headers , params=params )
@@ -19,3 +18,9 @@ if __name__ == "__main__":
 	config = Box( utils.read_yaml( "../config.yaml" ) )
 
 	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/next" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/previous" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/stop" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/play" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/pause" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/resume" )
+	get_json( f"http://{config.sanic.host}:{config.sanic.port}/button/play_pause" )
