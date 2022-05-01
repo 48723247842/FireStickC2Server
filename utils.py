@@ -31,7 +31,7 @@ def get_common_time_string( as_timezone ):
 	return f"{now_string}.{milliseconds}"
 
 # https://stackoverflow.com/q/15608987
-def reach( name ):
+def stack_reach( name ):
 	for f in inspect.stack():
 		if name in f[ 0 ].f_locals:
 			return f[ 0 ].f_locals[ name ]

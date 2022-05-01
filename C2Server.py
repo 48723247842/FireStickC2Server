@@ -12,6 +12,8 @@ from sanic.signals import Event as sanic_event
 
 from routes.misc import misc_blueprint
 from routes.button import button_blueprint
+from routes.twitch import twitch_blueprint
+from routes.youtube import youtube_blueprint
 
 class C2Server:
 	def __init__( self , options={} ):
@@ -20,7 +22,6 @@ class C2Server:
 			self.config = Box( utils.read_yaml( self.options.config_file_path ) )
 			self.config.time_zone = timezone( self.config.redis.time_zone )
 			utils.setup_signal_handlers( self.on_signal_interrupt )
-			# self.redis = utils.redis_connect( self.config.redis.host , self.config.redis.port , self.config.redis.db , self.config.redis.password )
 			self.redis = RedisWrapper( self.config.redis )
 			print( self.config )
 		except Exception as e:
@@ -43,7 +44,6 @@ class C2Server:
 	def start( self ):
 		try:
 			self.log( f"Fire Stick C2 Server Starting" )
-
 			# https://sanic.dev/en/guide/advanced/signals.html#built-in-signals
 			# self.app.add_signal( self.stop , "boo.bar.baz" )
 			# self.app.signal( event="server.shutdown.after" )( self.stop )
@@ -53,16 +53,16 @@ class C2Server:
 			def _shutdown( *args , **kwargs ):
 				self.stop()
 			self.app = app
-
 			self.redis.set_state({
 				"status": "online" ,
 				"time": utils.get_common_time_string( self.config.time_zone )
 			})
 			# print( self.redis.get_state() )
-			self.log( "Server Online" )
-
 			self.app.blueprint( misc_blueprint )
 			self.app.blueprint( button_blueprint )
+			self.app.blueprint( twitch_blueprint )
+			self.app.blueprint( youtube_blueprint )
+			self.log( "Server Online" )
 			self.app.run( host=self.config.sanic.host , port=self.config.sanic.port )
 		except Exception as e:
 			self.log( stackprinter.format() )
