@@ -12,6 +12,8 @@ from sanic.signals import Event as sanic_event
 
 from routes.misc import misc_blueprint
 from routes.button import button_blueprint
+from routes.stream_deck import streamdeck_blueprint
+
 from routes.twitch import twitch_blueprint
 from routes.youtube import youtube_blueprint
 
@@ -24,6 +26,7 @@ class C2Server:
 			utils.setup_signal_handlers( self.on_signal_interrupt )
 			self.redis = RedisWrapper( self.config.redis )
 			print( self.config )
+			utils.store_config_in_db( self.config , self.redis )
 		except Exception as e:
 			self.log( stackprinter.format() )
 			sys.exit( 1 )
@@ -60,6 +63,8 @@ class C2Server:
 			# print( self.redis.get_state() )
 			self.app.blueprint( misc_blueprint )
 			self.app.blueprint( button_blueprint )
+			self.app.blueprint( streamdeck_blueprint )
+
 			self.app.blueprint( twitch_blueprint )
 			self.app.blueprint( youtube_blueprint )
 			self.log( "Server Online" )

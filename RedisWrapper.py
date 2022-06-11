@@ -33,3 +33,19 @@ class RedisWrapper:
 
 	def get_state( self ):
 		return json.loads( self.redis.get( f"{self.config.prefix}.STATE" ) )
+
+	def push_state_list( self , state_object ):
+		list_key = f"{self.config.prefix}.STATE_LIST"
+		self.redis.rpush( list_key , json.dumps( state_object ) )
+		length = self.redis.llen( list_key )
+		if length > 100:
+			self.redis.lpop( list_key )
+		return json.loads( self.redis.get( f"{self.config.prefix}.STATE" ) )
+
+	def get_state_list_last_two( self ):
+		list_key = f"{self.config.prefix}.STATE_LIST"
+		last_two = self.redis.lrange( list_key , -2 , -1 )
+		return {
+			"previous": json.loads( last_two[ 0 ] ) ,
+			"current": json.loads( last_two[ 1 ] )
+		}

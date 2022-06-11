@@ -47,12 +47,14 @@ async def play( request ):
 	previous_state = this.redis.get_state()
 	response = { "route": "/youtube/play" , "previous_state": previous_state , "result": "failed" }
 	if "url" in request.args:
-		adb_status = False
+		old_adb_status = False
+		new_adb_status = False
 		try:
 			response[ "url" ] = request.args[ "url" ][ 0 ]
 			adb = ADBWrapper( { "ip": this.config.adb.ip , "port": this.config.adb.port } )
+			old_adb_status = adb.get_status()
 			adb.open_uri( response[ "url" ] )
-			adb_status = adb.get_status()
+			new_adb_status = adb.get_status()
 			response[ "result" ] = "success"
 		except Exception as e:
 			this.log( stackprinter.format() )

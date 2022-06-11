@@ -3,6 +3,7 @@ import redis
 import signal
 import datetime
 import inspect
+import imagehash
 
 # https://github.com/0187773933/PowerPointInteractiveGamesGenerator/blob/ec49a26e6aae66fadda40ffa3b74a2e5e6f6e6e3/utils.py
 # https://github.com/0187773933/RaspiCameraMotionTrackerFrameConsumer/blob/master/frame_consumer.py
@@ -45,3 +46,24 @@ def get_server_context():
 			continue
 		return f[ 0 ].f_locals[ "server" ]
 	return False
+
+
+# Manually Sets Required Stuff For State Functions
+def store_config_in_db( config , redis ):
+	## Spotify - Set Currated Playlists
+	currated_playlists_list_key = f"{config.redis.prefix}.APPS.SPOTIFY.PLAYLISTS.CURRATED"
+	redis.redis.delete( currated_playlists_list_key )
+	for i , x in enumerate( config.apps.spotify.playlists.currated ):
+		redis.redis.rpush( currated_playlists_list_key , x )
+
+
+def difference_between_two_images( pil_image_1 , pil_image_2 ):
+	pil_image_1_hash = imagehash.phash( pil_image_1 )
+	pil_image_2_hash = imagehash.phash( pil_image_2 )
+	difference = ( pil_image_1_hash - pil_image_2_hash )
+	return difference
+
+
+
+
+
