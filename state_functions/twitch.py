@@ -269,7 +269,7 @@ def play_next_live_follower( c2 ):
 			"previous_adb_status": previous_adb_status ,
 			"adb_opened_uri": uri ,
 			"new_state": new_state ,
-			"new_adb_status": new_adb_status ,
+			"adb_status": new_adb_status ,
 		}
 		return result
 	except Exception as e:
