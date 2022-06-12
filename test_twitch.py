@@ -4,6 +4,8 @@ from box import Box
 import requests
 from pprint import pprint
 import yaml
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 
 def read_yaml( file_path ):
 	with open( file_path ) as f:
@@ -56,6 +58,7 @@ def get_followed_streams( user_id , client_id , oauth_token ):
 	response = requests.get( endpoint , headers=my_headers , params=my_params )
 	response.raise_for_status()
 	data = response.json()
+	## deal with pagnation
 	return data
 
 # https://api.twitch.tv/helix/streams?user_login=pawelqhd
@@ -72,20 +75,55 @@ def is_user_live( username , client_id , oauth_token ):
 		return False
 	return data[0]['type'] == 'live'
 
+def one_hot_is_user_live( options ):
+	try:
+		endpoint = 'https://api.twitch.tv/helix/streams'
+		my_headers = {
+			'Client-ID': options[ 1 ] ,
+			'Authorization': f'Bearer {options[ 2 ]}'
+		}
+		my_params = {'user_login': options[ 0 ]}
+		response = requests.get( endpoint , headers=my_headers , params=my_params )
+		data = response.json()['data']
+		if len(data) == 0:
+			return False
+		result = data[0]['type'] == 'live'
+		return [ options[ 0 ] , result ]
+	except Exception as e:
+		print( e )
+		return False
+
+def batch_process( options ):
+	batch_size = len( options[ "batch_list" ] )
+	with ThreadPoolExecutor() as executor:
+		result_pool = list( tqdm( executor.map( options[ "function_reference" ] , iter( options[ "batch_list" ] ) ) , total=batch_size ) )
+		return result_pool
+
+
 if __name__ == "__main__":
 	config = Box( read_yaml( sys.argv[ 1 ] ) )
-	user_info = get_user_info(
-		sys.argv[ 2 ] ,
-		config.apps.twitch.personal.client_id ,
-		config.apps.twitch.personal.oauth_token ,
-	)
-	pprint( user_info )
-	following = get_followed_streams(
-		user_info[ "id" ] ,
-		config.apps.twitch.personal.client_id ,
-		config.apps.twitch.personal.oauth_token ,
-	)
-	pprint( following )
+
+	batch_option_list = [ [ x , config.apps.twitch.personal.client_id , config.apps.twitch.personal.oauth_token ] for x in config.apps.twitch.following.currated ]
+	results = batch_process({
+		"max_workers": 5 ,
+		"batch_list": batch_option_list. ,
+		"function_reference": one_hot_is_user_live
+	})
+	pprint( results )
+
+
+	# user_info = get_user_info(
+	# 	sys.argv[ 2 ] ,
+	# 	config.apps.twitch.personal.client_id ,
+	# 	config.apps.twitch.personal.oauth_token ,
+	# )
+	# pprint( user_info )
+	# following = get_followed_streams(
+	# 	user_info[ "id" ] ,
+	# 	config.apps.twitch.personal.client_id ,
+	# 	config.apps.twitch.personal.oauth_token ,
+	# )
+	# pprint( following )
 
 
 	# is_live = is_user_live(
