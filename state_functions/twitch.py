@@ -244,7 +244,6 @@ def play_next_live_follower( c2 ):
 
 		# https://open.spotify.com/playlist/75igTPKAdDsBYFtYCHO555
 		# https://github.com/justintv/Twitch-API/blob/cf1e6231cc7b22373a5407a9cbd40d5c4ee49dd3/mobile_deeplinks.md
-		# uri = f"twitch:{next_live_user}"
 		# uri = f"https://twitch.tv/{next_live_user}"
 		# uri = f"twitch://game/{next_live_user}"
 		# uri = f"twitch://video/{next_live_user}"
@@ -253,6 +252,9 @@ def play_next_live_follower( c2 ):
 		print( f"ADB :: Launching :: {uri}" )
 		adb.open_uri( uri )
 		new_adb_status = adb.get_status()
+
+		# make sure chat is open or closed ??
+		# adb.press_key_sequence( [ asdf , asdf , ... ] )
 
 		new_state = {
 			"name": "twitch" ,
