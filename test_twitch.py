@@ -88,7 +88,9 @@ def one_hot_is_user_live( options ):
 		if len(data) == 0:
 			return False
 		result = data[0]['type'] == 'live'
-		return [ options[ 0 ] , result ]
+		if result == True:
+			return options[ 0 ]
+		return False
 	except Exception as e:
 		print( e )
 		return False
@@ -106,10 +108,14 @@ if __name__ == "__main__":
 	batch_option_list = [ [ x , config.apps.twitch.personal.client_id , config.apps.twitch.personal.oauth_token ] for x in config.apps.twitch.following.currated ]
 	results = batch_process({
 		"max_workers": 5 ,
-		"batch_list": batch_option_list. ,
+		"batch_list": batch_option_list ,
 		"function_reference": one_hot_is_user_live
 	})
-	pprint( results )
+	results = [ x for x in results if x ]
+	order = { v: i for i , v in enumerate( config.apps.twitch.following.currated ) }
+	currated_results = sorted( results , key=lambda x: order[ x ] )
+	print( currated_results )
+	# pprint( results )
 
 
 	# user_info = get_user_info(
