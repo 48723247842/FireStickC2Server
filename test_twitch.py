@@ -101,7 +101,6 @@ def batch_process( options ):
 		result_pool = list( tqdm( executor.map( options[ "function_reference" ] , iter( options[ "batch_list" ] ) ) , total=batch_size ) )
 		return result_pool
 
-
 if __name__ == "__main__":
 	config = Box( read_yaml( sys.argv[ 1 ] ) )
 

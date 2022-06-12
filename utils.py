@@ -4,6 +4,8 @@ import signal
 import datetime
 import inspect
 import imagehash
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 
 # https://github.com/0187773933/PowerPointInteractiveGamesGenerator/blob/ec49a26e6aae66fadda40ffa3b74a2e5e6f6e6e3/utils.py
 # https://github.com/0187773933/RaspiCameraMotionTrackerFrameConsumer/blob/master/frame_consumer.py
@@ -15,6 +17,12 @@ def write_yaml( file_path , python_object ):
 def read_yaml( file_path ):
 	with open( file_path ) as f:
 		return yaml.safe_load( f )
+
+def batch_process( options ):
+	batch_size = len( options[ "batch_list" ] )
+	with ThreadPoolExecutor() as executor:
+		result_pool = list( tqdm( executor.map( options[ "function_reference" ] , iter( options[ "batch_list" ] ) ) , total=batch_size ) )
+		return result_pool
 
 def setup_signal_handlers( function_pointer ):
 	signal.signal( signal.SIGABRT , function_pointer )

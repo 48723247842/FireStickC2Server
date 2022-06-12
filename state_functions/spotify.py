@@ -163,7 +163,7 @@ def uri( c2 , uri ):
 
 		result = {
 			"name": "spotify" ,
-			"function": "shuffle_on" ,
+			"function": "uri" ,
 			"uri": uri ,
 			"time": utils.get_common_time_string( c2.config.time_zone ) ,
 			"adb_status": new_adb_status

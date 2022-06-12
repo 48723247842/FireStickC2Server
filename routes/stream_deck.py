@@ -8,6 +8,7 @@ import stackprinter
 
 import utils
 import state_functions.spotify as spotify
+import state_functions.twitch as twitch
 
 # https://github.com/48723247842/WebsiteControllers/blob/6b70c72bbb4c02f3e659c39f1a75853fb0f683c4/python_app/api/disney/disney_utils.py
 
@@ -36,7 +37,7 @@ async def one( request ):
 		start_result = spotify.play_next_currated_playlist( this )
 		result = {
 			"route": "/streamdeck/1" ,
-			"state_function": "spotify.play_next_currated_playlist()" ,
+			"state_function": "spotify.play_next_currated_playlist" ,
 			"result": start_result ,
 		}
 	except Exception as e:
@@ -51,11 +52,11 @@ async def two( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
-		previous_state = this.redis.get_state()
+		start_result = twitch.play_next_live_follower( this )
 		result = {
 			"route": "/streamdeck/2" ,
-			"result": "success" ,
-			"previous_state": previous_state
+			"state_function": "twitch.play_next_live_follower" ,
+			"result": start_result ,
 		}
 	except Exception as e:
 		this.log( e )
