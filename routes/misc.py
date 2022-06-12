@@ -129,6 +129,10 @@ async def state_check( request ):
 	if current_state[ "adb_status" ][ "now_playing" ][ "now_playing_app" ] == adb_status[ "now_playing" ][ "now_playing_app" ]:
 		result[ "same_app" ] = True
 
+
+
+	# TODO = 12JUN2022 , tbc
+
 	# custom health checks for different apps
 	# pprint( previous_states_of_current_app )
 	if current_adb_app_name == "com.spotify.tv.android":
