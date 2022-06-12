@@ -56,10 +56,10 @@ class C2Server:
 			def _shutdown( *args , **kwargs ):
 				self.stop()
 			self.app = app
-			self.redis.set_state({
-				"status": "online" ,
-				"time": utils.get_common_time_string( self.config.time_zone )
-			})
+			# self.redis.set_state({
+			# 	"status": "online" ,
+			# 	"time": utils.get_common_time_string( self.config.time_zone )
+			# })
 			# print( self.redis.get_state() )
 			self.app.blueprint( misc_blueprint )
 			self.app.blueprint( button_blueprint )

@@ -64,6 +64,3 @@ def difference_between_two_images( pil_image_1 , pil_image_2 ):
 	return difference
 
 
-
-
-

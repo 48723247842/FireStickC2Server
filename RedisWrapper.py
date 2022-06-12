@@ -1,4 +1,5 @@
 from box import Box
+from pprint import pprint
 import redis
 import datetime
 from pytz import timezone
@@ -29,6 +30,7 @@ class RedisWrapper:
 		self.redis.rpush( log_key , message )
 
 	def set_state( self , state_object ):
+		# pprint( state_object )
 		self.redis.set( f"{self.config.prefix}.STATE" , json.dumps( state_object ) )
 
 	def get_state( self ):
