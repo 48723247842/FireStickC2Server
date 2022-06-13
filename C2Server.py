@@ -17,6 +17,12 @@ from routes.stream_deck import streamdeck_blueprint
 from routes.twitch import twitch_blueprint
 from routes.youtube import youtube_blueprint
 
+# https://stackoverflow.com/questions/59434725/retrieve-call-logs-android-throught-adb
+# https://stackoverflow.com/questions/29099061/sending-intent-using-adb
+# adb shell am start -a barcodescanner.RECVR -c android.intent.category.DEFAULT -n WMSMobileApp.WMSMobileApp/wmsmobileapp.activities.MainActivity -e com.motorolasolutions.emdk.datawedge.source scanner -e com.motorolasolutions.emdk.datawedge.data_string 508919007526
+
+# https://developer.android.com/training/app-links/deep-linking
+
 class C2Server:
 	def __init__( self , options={} ):
 		try:

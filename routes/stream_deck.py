@@ -9,6 +9,8 @@ import stackprinter
 import utils
 import state_functions.spotify as spotify
 import state_functions.twitch as twitch
+import state_functions.youtube as youtube
+import state_functions.disney as disney
 
 # https://github.com/48723247842/WebsiteControllers/blob/6b70c72bbb4c02f3e659c39f1a75853fb0f683c4/python_app/api/disney/disney_utils.py
 
@@ -69,11 +71,15 @@ async def three( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
-		previous_state = this.redis.get_state()
+		# start_result = youtube.play_next_live_follower( this )
+		# start_result = youtube.play_next_currated_normal_playlist( this )
+		# start_result = youtube.play_next_currated_normal_video( this )
+		start_result = youtube.play_next_currated_live_video( this )
 		result = {
 			"route": "/streamdeck/3" ,
-			"result": "success" ,
-			"previous_state": previous_state
+			# "state_function": "youtube.play_next_live_follower" ,
+			"state_function": "youtube.play_next_currated_normal_playlist" ,
+			"result": start_result
 		}
 	except Exception as e:
 		this.log( e )
@@ -85,11 +91,11 @@ async def four( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
-		previous_state = this.redis.get_state()
+		start_result = disney.play_next_currated_video_random( this )
 		result = {
 			"route": "/streamdeck/4" ,
-			"result": "success" ,
-			"previous_state": previous_state
+			"state_function": "disney.play_next_currated_video" ,
+			"result": start_result
 		}
 	except Exception as e:
 		this.log( e )

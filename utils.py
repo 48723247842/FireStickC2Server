@@ -4,6 +4,8 @@ import signal
 import datetime
 import inspect
 import imagehash
+import requests
+from pprint import pprint
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 
@@ -56,20 +58,128 @@ def get_server_context():
 		return f[ 0 ].f_locals[ "server" ]
 	return False
 
-
-# Manually Sets Required Stuff For State Functions
-def store_config_in_db( config , redis ):
-	## Spotify - Set Currated Playlists
-	currated_playlists_list_key = f"{config.redis.prefix}.APPS.SPOTIFY.PLAYLISTS.CURRATED"
-	redis.redis.delete( currated_playlists_list_key )
-	for i , x in enumerate( config.apps.spotify.playlists.currated ):
-		redis.redis.rpush( currated_playlists_list_key , x )
-
-
 def difference_between_two_images( pil_image_1 , pil_image_2 ):
 	pil_image_1_hash = imagehash.phash( pil_image_1 )
 	pil_image_2_hash = imagehash.phash( pil_image_2 )
 	difference = ( pil_image_1_hash - pil_image_2_hash )
 	return difference
+
+# def _youtube_get_member_info( options ):
+# 	headers = { "accept": "application/json, text/plain, */*" }
+# 	params = {
+# 		"part": "snippet" ,
+# 		"forUsername": options[ 0 ] ,
+# 		"key": options[ 1 ]
+# 	}
+# 	url = f"https://www.googleapis.com/youtube/v3/members"
+# 	response = requests.get( url , headers=headers , params=params )
+# 	response.raise_for_status()
+# 	result = response.json()
+# 	return result
+
+
+def _youtube_get_channel_id( options ):
+	try:
+		headers = { "accept": "application/json, text/plain, */*" }
+		params = {
+			"part": "id" ,
+			"forUsername": options[ 0 ] ,
+			"key": options[ 1 ]
+		}
+		url = f"https://www.googleapis.com/youtube/v3/channels"
+		response = requests.get( url , headers=headers , params=params )
+		response.raise_for_status()
+		result = response.json()
+		if "items" not in result:
+			# print( "\nCouldn't find ID , trying /v3/members" )
+			# result = _youtube_get_member_info( options )
+			# pprint( result )
+			# print( options )
+			# return False
+			return { options[ 0 ]: options[ 0 ] }
+		channel_id = result[ "items" ][ 0 ][ "id" ]
+		return { options[ 0 ]: channel_id }
+	except Exception as e:
+		print( e )
+		return { options[ 0 ]: options[ 0 ] }
+
+
+# Manually Sets Required Stuff For State Functions
+def store_config_in_db( config , redis ):
+
+	## STEP-1 === Spotify - Set Currated Playlists
+	spotify_currated_playlists_list_key = f"{config.redis.prefix}.APPS.SPOTIFY.PLAYLISTS.CURRATED"
+	redis.redis.delete( spotify_currated_playlists_list_key )
+	for i , x in enumerate( config.apps.spotify.playlists.currated ):
+		redis.redis.rpush( spotify_currated_playlists_list_key , x )
+
+	## ON HOLD UNTIL YOUTUBE API LIMITS
+	# ## STEP-2 === YouTube - Get Channel IDS For All Currated-Live-Channels
+	# youtube_currated_live_channel_ids = batch_process({
+	# 	"max_workers": 5 ,
+	# 	"batch_list": [ [ x , config.apps.youtube.personal.api_key ] for x in config.apps.youtube.following.currated.live ] ,
+	# 	"function_reference": _youtube_get_channel_id
+	# })
+	# youtube_currated_live_channel_ids = [ x for x in youtube_currated_live_channel_ids if x ]
+	# youtube_currated_live_channel_ids_key = f"{config.redis.prefix}.APPS.YOUTUBE.FOLLOWING.CURRATED.LIVE.USER_IDS"
+	# redis.redis.delete( youtube_currated_live_channel_ids_key )
+	# for i , x in enumerate( youtube_currated_live_channel_ids ):
+	# 	# MAYBE TODO = base64 encode usernames for redis key ???
+	# 	channel_name = list( x.keys() )[ 0 ]
+	# 	redis.redis.sadd( youtube_currated_live_channel_ids_key , x[ channel_name ] )
+
+	# ## STEP-3 === YouTube - Get Channel IDS For All Currated-Normal-Channels
+	# youtube_currated_normal_channel_ids = batch_process({
+	# 	"max_workers": 5 ,
+	# 	"batch_list": [ [ x , config.apps.youtube.personal.api_key ] for x in config.apps.youtube.following.currated.normal ] ,
+	# 	"function_reference": _youtube_get_channel_id
+	# })
+	# youtube_currated_normal_channel_ids = [ x for x in youtube_currated_normal_channel_ids if x ]
+	# youtube_currated_normal_channel_ids_key = f"{config.redis.prefix}.APPS.YOUTUBE.FOLLOWING.CURRATED.NORMAL.USER_IDS"
+	# redis.redis.delete( youtube_currated_normal_channel_ids_key )
+	# for i , x in enumerate( youtube_currated_normal_channel_ids ):
+	# 	# MAYBE TODO = base64 encode usernames for redis key ???
+	# 	channel_name = list( x.keys() )[ 0 ]
+	# 	redis.redis.sadd( youtube_currated_normal_channel_ids_key , x[ channel_name ] )
+
+
+	## STEP-4 == YouTube - Store - Currated - Normal - Playlists - FOR - StreamDeck - Button 3
+	youtube_currated_normal_playlist_key = f"{config.redis.prefix}.APPS.YOUTUBE.CURRATED.PLAYLISTS.NORMAL"
+	redis.redis.delete( youtube_currated_normal_playlist_key )
+	for i , x in enumerate( config.apps.youtube.playlists.currated.normal ):
+		redis.redis.rpush( youtube_currated_normal_playlist_key , x )
+
+	## STEP-5 == YouTube - Store - Currated - Normal - Videos - FOR - StreamDeck - Button 3
+	youtube_currated_normal_videos_key = f"{config.redis.prefix}.APPS.YOUTUBE.CURRATED.VIDEOS.NORMAL"
+	redis.redis.delete( youtube_currated_normal_videos_key )
+	for i , x in enumerate( config.apps.youtube.videos.currated.normal ):
+		redis.redis.rpush( youtube_currated_normal_videos_key , x )
+
+	## STEP-6 == YouTube - Store - Currated - Live - Videos - FOR - StreamDeck - Button 3
+	youtube_currated_live_videos_key = f"{config.redis.prefix}.APPS.YOUTUBE.CURRATED.VIDEOS.LIVE"
+	redis.redis.delete( youtube_currated_live_videos_key )
+	for i , x in enumerate( config.apps.youtube.videos.currated.live ):
+		redis.redis.rpush( youtube_currated_live_videos_key , x )
+
+	## STEP-7 == Disney - Store - Currated - Random - Video IDS - FOR - StreamDeck - Button 4
+	disney_videos_currated_random_key = f"{config.redis.prefix}.APPS.DISNEY.VIDEOS.CURRATED.RANDOM"
+	disney_videos_currated_random_watched_key = f"{config.redis.prefix}.APPS.DISNEY.VIDEOS.CURRATED.RANDOM.WATCHED"
+	disney_videos_currated_random_watched_temp_key = f"{config.redis.prefix}.APPS.DISNEY.VIDEOS.CURRATED.RANDOM.WATCHED.TEMP"
+	redis.redis.delete( disney_videos_currated_random_key )
+	# for i , x in enumerate( config.apps.disney.videos.currated ):
+	# 	redis.redis.sadd( disney_videos_currated_random_key , x )
+	step_7_pipeline = redis.redis.pipeline()
+	for i , x in enumerate( config.apps.disney.videos.currated ):
+		step_7_pipeline.sadd( disney_videos_currated_random_key , x )
+	step_7_pipeline.execute()
+	redis.redis.sdiffstore( disney_videos_currated_random_watched_temp_key , disney_videos_currated_random_key , disney_videos_currated_random_watched_key )
+	total_unwatched = redis.redis.scard( disney_videos_currated_random_watched_temp_key )
+	if int( total_unwatched ) > 0:
+		redis.redis.delete( disney_videos_currated_random_key )
+		redis.redis.rename( disney_videos_currated_random_watched_temp_key , disney_videos_currated_random_key )
+
+
+
+
 
 

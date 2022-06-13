@@ -52,21 +52,30 @@ def one_hot_get_channel_live_streams( options ):
 		"eventType": "live" ,
 		"type": "video" ,
 		"key": options[ 1 ] ,
-		"order": "viewCount" ,
+		# "order": "viewCount" ,
+		"order": "date" , # makes live_streams[ 0 ] = 'latest' and live_streams[ -1 ] = 'earliest'
 		"maxResults": 50 # after 50 you have to start dealing with pageToken and pagnation stuff
 	}
 	url = f"https://www.googleapis.com/youtube/v3/search"
 	response = requests.get( url , headers=headers , params=params )
 	response.raise_for_status()
-	result = response.json()
-	pprint( result )
+	live_streams = response.json()
+	live_streams = [ {
+		"id": x[ "id" ][ "videoId" ] ,
+		"description": x[ "snippet" ][ "description" ] ,
+		"title": x[ "snippet" ][ "title" ] ,
+		"published_time": x[ "snippet" ][ "publishTime" ]
+	} for x in live_streams[ "items" ] ]
+	return live_streams
 
 if __name__ == "__main__":
 	config = Box( read_yaml( sys.argv[ 1 ] ) )
 
+	batch_option_list = [  ]
 	channel_id = get_channels_id( "MontereyBayAquarium" , config.apps.youtube.personal.api_key )
 	print( channel_id )
-	one_hot_get_channel_live_streams( [ channel_id , config.apps.youtube.personal.api_key ] )
+	live_streams = one_hot_get_channel_live_streams( [ channel_id , config.apps.youtube.personal.api_key ] )
+	pprint( live_streams )
 
 	# results = batch_process({
 	# 	"max_workers": 5 ,

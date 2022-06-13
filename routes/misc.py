@@ -11,6 +11,7 @@ from ADBWrapper import ADBWrapper
 import utils
 
 import state_functions.twitch as twitch
+import state_functions.youtube as youtube
 
 misc_blueprint = Blueprint( "misc_blueprint" , url_prefix="/" )
 
@@ -19,45 +20,24 @@ async def home( request ):
 	print( this.config )
 	return sanic_response.text( "you found the Fire Stick C2 Server !!\n" )
 
-def _update_all():
-	this = utils.get_server_context()
-
-	# twitch
-	live_users_currated = twitch.update_live_users_currated( this )
-
-	# TODO = youtube
-
-	result = {
-		"update_results": {
-			"twitch": {
-				"live_users_currated": live_users_currated
-			} ,
-			"youtube": {
-				"live_streams": False
-			}
-		} ,
-		"status": {
-			"state": current_state ,
-			"adb": adb_status ,
-		}
-	}
-	return
-
 async def update_all( request ):
 	this = utils.get_server_context()
 
 	# twitch
-	live_users_currated = twitch.update_live_users_currated( this )
+	twitch_live_users_currated = twitch.update_currated_live_users( this )
 
-	# TODO = youtube
+	# TODO = youtube , on pause until we figure out queries per day problem , over the limit
+	# web scraping
+	#youtube_live_streams = youtube.update_currated_live_streams( this )
 
 	state_status = _status()
 	result = {
 		"update_results": {
 			"twitch": {
-				"live_users_currated": live_users_currated
+				"live_users_currated": twitch_live_users_currated
 			} ,
 			"youtube": {
+				# "live_streams": youtube_live_streams
 				"live_streams": False
 			}
 		} ,

@@ -213,7 +213,7 @@ def get_live_users_currated( config ):
 	currated_results = sorted( results , key=lambda x: order[ x ] )
 	return currated_results
 
-def update_live_users_currated( c2 ):
+def update_currated_live_users( c2 ):
 	live_currated_following_key = f"{c2.config.redis.prefix}.APPS.TWITCH.FOLLOWING.CURRATED"
 	live_currated_following = get_live_users_currated( c2.config )
 	c2.redis.redis.delete( live_currated_following_key )
@@ -229,12 +229,12 @@ def play_next_live_follower( c2 ):
 
 		live_currated_following_key = f"{c2.config.redis.prefix}.APPS.TWITCH.FOLLOWING.CURRATED"
 		if previous_state[ "name" ] != "twitch":
-			update_live_users_currated( c2 )
+			update_currated_live_users( c2 )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		else:
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		if next_live_user == False:
-			update_live_users_currated( c2 )
+			update_currated_live_users( c2 )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		if next_live_user == False:
 			print( "None of Currated Users are Online !!" )
