@@ -21,7 +21,21 @@ from routes.youtube import youtube_blueprint
 # https://stackoverflow.com/questions/29099061/sending-intent-using-adb
 # adb shell am start -a barcodescanner.RECVR -c android.intent.category.DEFAULT -n WMSMobileApp.WMSMobileApp/wmsmobileapp.activities.MainActivity -e com.motorolasolutions.emdk.datawedge.source scanner -e com.motorolasolutions.emdk.datawedge.data_string 508919007526
 
+# the gang discovers Intents burried in .apk files
 # https://developer.android.com/training/app-links/deep-linking
+# https://f-droid.org/en/packages/com.oF2pks.applicationsinfo/
+	# com.amazon.firetv.youtube
+# adb shell pm list packages
+# adb shell pm path com.amazon.firetv.youtube
+	# package:/data/app/com.amazon.firetv.youtube-w7soWc29LVuZZsacd3FOzQ==/base.apk
+# adb pull /data/app/com.amazon.firetv.youtube-w7soWc29LVuZZsacd3FOzQ==/base.apk firetv-youtube.apk
+# /Users/morpheous/Library/Android/sdk/build-tools/30.0.2/aapt d xmltree firetv-youtube.apk AndroidManifest.xm
+
+# com.amazon.firetv.youtube
+# 	Activities =
+# 		com.google.android.gms.common.api.GoogleApi.Activity
+# 		dev.cobalt.app.MainActivity
+# 		dev.cobalt.coat.MediaPlaybackService
 
 class C2Server:
 	def __init__( self , options={} ):

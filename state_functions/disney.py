@@ -200,7 +200,8 @@ def play_next_currated_video_random( c2 ):
 
 		# restarts from the last watched position
 		# so need to rewind ???
-		adb.press_key_sequence( [ 21 , 21 , 21 , 21 , 21 , 23 , 23 , 23 , 23 ] )
+		time.sleep( 7 )
+		adb.press_key_sequence( [ 21 , 21 , 21 , 21 , 21 , 23 , 23 , 23 ] )
 
 
 		new_state = {
