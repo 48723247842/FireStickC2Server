@@ -258,25 +258,25 @@ def _enable_shuffle( adb ):
 		# time.sleep( 1 )
 		# adb.press_key( 23 )
 		# time.sleep( 1 )
-		adb.take_screen_shot()
+		# adb.take_screen_shot()
 		# print( adb.screen_shot.size )
 		# adb.screen_shot.show()
 
 		# ( left , uppper , right , lower )
 		# configure these
-		origin = [ 616 , 922 ]
-		size = [ 80 , 80 ]
+		# origin = [ 616 , 922 ]
+		# size = [ 80 , 80 ]
 
 		# then calculate lower-right coordinate
-		other_position = [ ( origin[ 0 ] + size[ 0 ] ) , ( origin[ 1 ] + size[ 1 ] ) ]
-		cropped_shuffle_symbol = adb.screen_shot.crop( ( origin[ 0 ] , origin[ 1 ] , other_position[ 0 ] , other_position[ 1 ] ) )
+		# other_position = [ ( origin[ 0 ] + size[ 0 ] ) , ( origin[ 1 ] + size[ 1 ] ) ]
+		# cropped_shuffle_symbol = adb.screen_shot.crop( ( origin[ 0 ] , origin[ 1 ] , other_position[ 0 ] , other_position[ 1 ] ) )
 		# cropped_shuffle_symbol.show()
 
 		shuffle_true_image = Image.open( spotify_shuffle_true_image_path )
 		shuffle_false_image = Image.open( spotify_shuffle_false_image_path )
 
-		true_difference = utils.difference_between_two_images( cropped_shuffle_symbol , shuffle_true_image )
-		false_difference = utils.difference_between_two_images( cropped_shuffle_symbol , shuffle_false_image )
+		true_difference = utils.difference_between_two_images( adb.screen_shot , shuffle_true_image )
+		false_difference = utils.difference_between_two_images( adb.screen_shot , shuffle_false_image )
 		differences = {
 			"true" :  true_difference,
 			"false": false_difference ,
@@ -290,6 +290,8 @@ def _enable_shuffle( adb ):
 		shuffled_enabled = differences[ "closest" ]
 		if shuffled_enabled == False:
 			print( "Enabling Shuffle" )
+			adb.press_key_sequence( [ 21 , 21 , 21 , 21 , 21 , 21 ] )
+			adb.press_key( 22 )
 			adb.press_key( 23 )
 			time.sleep( 0.5 )
 		else:

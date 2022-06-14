@@ -5,7 +5,7 @@ import signal
 import datetime
 import inspect
 from PIL import Image
-# import imagehash
+import imagehash
 import imgcompare
 from box import Box
 import requests
@@ -90,15 +90,15 @@ def wait_on_screen( options ):
 	found = False
 	while found == False:
 		options.adb.take_screen_shot()
-		screenshot = options.adb.screen_shot
 		if "other_position" in options.cropping:
-			screenshot = screenshot.crop( ( options.cropping.origin[ 0 ] , options.cropping.origin[ 1 ] , options.cropping.other_position[ 0 ] , options.cropping.other_position[ 1 ] ) )
-		# is_same = imgcompare.is_equal( screenshot , compare_image , tolerance=options.tolerance_threshold )
+			options.adb.screen_shot = options.adb.screen_shot.crop( ( options.cropping.origin[ 0 ] , options.cropping.origin[ 1 ] , options.cropping.other_position[ 0 ] , options.cropping.other_position[ 1 ] ) )
+		# is_same = imgcompare.is_equal( options.adb.screen_shot , compare_image , tolerance=options.tolerance_threshold )
 		# if is_same == True:
 		# 	found = True
-		difference = imgcompare.image_diff_percent( screenshot , compare_image )
+		difference = imgcompare.image_diff_percent( options.adb.screen_shot , compare_image ) # faster , but less acurate than image-hash ?
 		print( f"Difference === {difference}" )
 		if difference < options.tolerance_threshold:
+			# options.adb.screen_shot.show()
 			found = True
 		else:
 			now = datetime.datetime.now()
@@ -106,8 +106,8 @@ def wait_on_screen( options ):
 			if duration_milliseconds > options.time_out_milliseconds:
 				return False
 			print( f"Sleeping for {options.check_interval_milliseconds} milliseconds" )
-			screenshot.show()
-			compare_image.show()
+			options.adb.screen_shot.show()
+			# compare_image.show()
 			time.sleep( ( options.check_interval_milliseconds / 1000 ) )
 			# time.sleep( 30 )
 	return True
