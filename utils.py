@@ -108,8 +108,8 @@ def wait_on_screen( options ):
 			print( f"Sleeping for {options.check_interval_milliseconds} milliseconds" )
 			screenshot.show()
 			compare_image.show()
-			# time.sleep( ( options.check_interval_milliseconds / 1000 ) )
-			time.sleep( 30 )
+			time.sleep( ( options.check_interval_milliseconds / 1000 ) )
+			# time.sleep( 30 )
 	return True
 
 # The opposite of wait_on_screen()
