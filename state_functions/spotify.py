@@ -229,14 +229,37 @@ def _enable_shuffle( adb ):
 		frame_geometry = [ x.strip().split( " " ) for x in frame_geometry if x ]
 		frame_geometry = frame_geometry[ 1 ]
 		print( frame_geometry )
+
+		spotify_shuffle_true_image_path = Path.cwd().joinpath( "state_functions" , "images" , "spotify_shuffle_true.png" ).resolve()
+		spotify_shuffle_false_image_path = Path.cwd().joinpath( "state_functions" , "images" , "spotify_shuffle_false.png" ).resolve()
+
+		# addon , try to wait for shuffle icon to appear
+		print( "waiting on screen ???" )
 		adb.press_key_sequence( [ 21 , 21 , 21 , 21 , 21 , 21 ] ) # ensures we start all the way to the left
-		# adb.press_key_sequence( [ 22 , 23 , ad ] )
 		adb.press_key( 22 )
+		time.sleep( 0.300 )
+		utils.wait_on_screen({
+			"adb": adb ,
+			"file_path": spotify_shuffle_true_image_path ,
+			"cropping": {
+				"origin": [ 616 , 922 ] ,
+				"size": [ 80 , 80 ]
+			} ,
+			"tolerance_threshold": 6.0 ,
+			"time_out_milliseconds": 20000 ,
+			"check_interval_milliseconds": 500 ,
+		})
+		print( "done wainting on screen ???" )
+		time.sleep( 0.300 )
+
+		# adb.press_key_sequence( [ 21 , 21 , 21 , 21 , 21 , 21 ] ) # ensures we start all the way to the left
+		# adb.press_key_sequence( [ 22 , 23 , ad ] )
+		# adb.press_key( 22 )
 		# time.sleep( 1 )
 		# adb.press_key( 23 )
 		# time.sleep( 1 )
 		adb.take_screen_shot()
-		print( adb.screen_shot.size )
+		# print( adb.screen_shot.size )
 		# adb.screen_shot.show()
 
 		# ( left , uppper , right , lower )
@@ -248,9 +271,6 @@ def _enable_shuffle( adb ):
 		other_position = [ ( origin[ 0 ] + size[ 0 ] ) , ( origin[ 1 ] + size[ 1 ] ) ]
 		cropped_shuffle_symbol = adb.screen_shot.crop( ( origin[ 0 ] , origin[ 1 ] , other_position[ 0 ] , other_position[ 1 ] ) )
 		# cropped_shuffle_symbol.show()
-
-		spotify_shuffle_true_image_path = Path.cwd().joinpath( "state_functions" , "images" , "spotify_shuffle_true.png" ).resolve()
-		spotify_shuffle_false_image_path = Path.cwd().joinpath( "state_functions" , "images" , "spotify_shuffle_false.png" ).resolve()
 
 		shuffle_true_image = Image.open( spotify_shuffle_true_image_path )
 		shuffle_false_image = Image.open( spotify_shuffle_false_image_path )
@@ -265,13 +285,15 @@ def _enable_shuffle( adb ):
 		}
 		differences[ "closest_value" ] = min( differences[ "true" ] , differences[ "false" ] )
 		differences[ "closest" ] = differences[ differences[ "closest_value" ] ]
-		# pprint( differences )
+		pprint( differences )
 
 		shuffled_enabled = differences[ "closest" ]
 		if shuffled_enabled == False:
 			print( "Enabling Shuffle" )
 			adb.press_key( 23 )
 			time.sleep( 0.5 )
+		else:
+			print( "Shuffle Already Enabled" )
 		return True
 	except Exception as e:
 		print( stackprinter.format() )

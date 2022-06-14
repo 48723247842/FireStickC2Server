@@ -19,9 +19,12 @@ from routes.youtube import youtube_blueprint
 
 # https://stackoverflow.com/questions/59434725/retrieve-call-logs-android-throught-adb
 # https://stackoverflow.com/questions/29099061/sending-intent-using-adb
+# https://stackoverflow.com/questions/29099061/sending-intent-using-adb#29103873
 # adb shell am start -a barcodescanner.RECVR -c android.intent.category.DEFAULT -n WMSMobileApp.WMSMobileApp/wmsmobileapp.activities.MainActivity -e com.motorolasolutions.emdk.datawedge.source scanner -e com.motorolasolutions.emdk.datawedge.data_string 508919007526
+# https://stackoverflow.com/questions/49159172/how-to-pass-intent-data-when-starting-app-via-adb
+# https://www.xgouchet.fr/android/index.php?article42/launch-intents-using-adb
 
-# the gang discovers Intents burried in .apk files
+# discover Intents buried in .apk files
 # https://developer.android.com/training/app-links/deep-linking
 # https://f-droid.org/en/packages/com.oF2pks.applicationsinfo/
 	# com.amazon.firetv.youtube
@@ -29,13 +32,16 @@ from routes.youtube import youtube_blueprint
 # adb shell pm path com.amazon.firetv.youtube
 	# package:/data/app/com.amazon.firetv.youtube-w7soWc29LVuZZsacd3FOzQ==/base.apk
 # adb pull /data/app/com.amazon.firetv.youtube-w7soWc29LVuZZsacd3FOzQ==/base.apk firetv-youtube.apk
-# /Users/morpheous/Library/Android/sdk/build-tools/30.0.2/aapt d xmltree firetv-youtube.apk AndroidManifest.xm
+# /Users/morpheous/Library/Android/sdk/build-tools/30.0.2/aapt d xmltree firetv-youtube.apk AndroidManifest.xml
 
 # com.amazon.firetv.youtube
 # 	Activities =
 # 		com.google.android.gms.common.api.GoogleApi.Activity
 # 		dev.cobalt.app.MainActivity
 # 		dev.cobalt.coat.MediaPlaybackService
+
+# StreamDeck.py should be sanic server
+# for restart , blank screen but still on , etc
 
 class C2Server:
 	def __init__( self , options={} ):

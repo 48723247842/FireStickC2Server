@@ -99,6 +99,7 @@ RUN python -m pip install pyyaml -U
 RUN python -m pip install stackprinter -U
 RUN python -m pip install python-box -U
 RUN python -m pip install redis-circular-list -U
+RUN python -m pip install imgcompare -U
 
 COPY . /home/$USERNAME/
 

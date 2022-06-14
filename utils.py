@@ -1,9 +1,13 @@
+import time
 import yaml
 import redis
 import signal
 import datetime
 import inspect
-import imagehash
+from PIL import Image
+# import imagehash
+import imgcompare
+from box import Box
 import requests
 from pprint import pprint
 from tqdm import tqdm
@@ -59,24 +63,64 @@ def get_server_context():
 	return False
 
 def difference_between_two_images( pil_image_1 , pil_image_2 ):
-	pil_image_1_hash = imagehash.phash( pil_image_1 )
-	pil_image_2_hash = imagehash.phash( pil_image_2 )
-	difference = ( pil_image_1_hash - pil_image_2_hash )
-	return difference
+	# pil_image_1_hash = imagehash.phash( pil_image_1 )
+	# pil_image_2_hash = imagehash.phash( pil_image_2 )
+	# difference = ( pil_image_1_hash - pil_image_2_hash )
+	# return difference
+	return imgcompare.image_diff_percent( pil_image_1 , pil_image_2 )
 
-# def _youtube_get_member_info( options ):
-# 	headers = { "accept": "application/json, text/plain, */*" }
-# 	params = {
-# 		"part": "snippet" ,
-# 		"forUsername": options[ 0 ] ,
-# 		"key": options[ 1 ]
+# options = {
+# 	"adb": adb_object ,
+# 	"file_path": "/path/to/screenshot/of/screen/we/are/comparing/to.png" ,
+# 	"cropping": {
+# 		"origin": [ 616 , 922 ] ,
+# 		"size": [ 80 , 80 ]
 # 	}
-# 	url = f"https://www.googleapis.com/youtube/v3/members"
-# 	response = requests.get( url , headers=headers , params=params )
-# 	response.raise_for_status()
-# 	result = response.json()
-# 	return result
+# 	"tolerance_threshold": 2.5 ,
+# 	"time_out_milliseconds": 20000 ,
+# 	"check_interval_milliseconds": 500 ,
+# }
+def wait_on_screen( options ):
+	options = Box( options )
+	pprint( options )
+	if options.cropping != False:
+		options.cropping.other_position = [ ( options.cropping.origin[ 0 ] + options.cropping.size[ 0 ] ) , ( options.cropping.origin[ 1 ] + options.cropping.size[ 1 ] ) ]
+	start = datetime.datetime.now()
+	compare_image = Image.open( options.file_path )
+	found = False
+	while found == False:
+		options.adb.take_screen_shot()
+		screenshot = options.adb.screen_shot
+		if "other_position" in options.cropping:
+			screenshot = screenshot.crop( ( options.cropping.origin[ 0 ] , options.cropping.origin[ 1 ] , options.cropping.other_position[ 0 ] , options.cropping.other_position[ 1 ] ) )
+		# is_same = imgcompare.is_equal( screenshot , compare_image , tolerance=options.tolerance_threshold )
+		# if is_same == True:
+		# 	found = True
+		difference = imgcompare.image_diff_percent( screenshot , compare_image )
+		print( f"Difference === {difference}" )
+		if difference < options.tolerance_threshold:
+			found = True
+		else:
+			now = datetime.datetime.now()
+			duration_milliseconds = ( ( now - start ).total_seconds() * 1000 )
+			if duration_milliseconds > options.time_out_milliseconds:
+				return False
+			print( f"Sleeping for {options.check_interval_milliseconds} milliseconds" )
+			screenshot.show()
+			compare_image.show()
+			# time.sleep( ( options.check_interval_milliseconds / 1000 ) )
+			time.sleep( 30 )
+	return True
 
+# The opposite of wait_on_screen()
+# this waits for the distance to be great enough that the screen is considered to have been removed/cleared
+# def wait_on_screen_to_clear( options ):
+# 	options = Box( options )
+# 	start = datetime.datetime.now()
+# 	screen_image = Image.open( options.file_path )
+# 	found = False
+# 	while found == False:
+# 		time.sleep(  )
 
 def _youtube_get_channel_id( options ):
 	try:
