@@ -36,11 +36,13 @@ async def one( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
+		tv_setup_result = utils.setup_tv( this.tv )
 		start_result = spotify.play_next_currated_playlist( this )
 		result = {
 			"route": "/streamdeck/1" ,
 			"state_function": "spotify.play_next_currated_playlist" ,
 			"result": start_result ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		print( stackprinter.format() )
@@ -54,11 +56,13 @@ async def two( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
+		tv_setup_result = utils.setup_tv( this.tv )
 		start_result = twitch.play_next_live_follower( this )
 		result = {
 			"route": "/streamdeck/2" ,
 			"state_function": "twitch.play_next_live_follower" ,
 			"result": start_result ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		this.log( e )
@@ -74,12 +78,14 @@ async def three( request ):
 		# start_result = youtube.play_next_live_follower( this )
 		# start_result = youtube.play_next_currated_normal_playlist( this )
 		# start_result = youtube.play_next_currated_normal_video( this )
+		tv_setup_result = utils.setup_tv( this.tv )
 		start_result = youtube.play_next_currated_live_video( this )
 		result = {
 			"route": "/streamdeck/3" ,
 			# "state_function": "youtube.play_next_live_follower" ,
 			"state_function": "youtube.play_next_currated_normal_playlist" ,
-			"result": start_result
+			"result": start_result ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		this.log( e )
@@ -91,11 +97,13 @@ async def four( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
+		tv_setup_result = utils.setup_tv( this.tv )
 		start_result = disney.play_next_currated_video_random( this )
 		result = {
 			"route": "/streamdeck/4" ,
 			"state_function": "disney.play_next_currated_video" ,
-			"result": start_result
+			"result": start_result ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		this.log( e )
@@ -107,11 +115,13 @@ async def five( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
+		tv_setup_result = utils.setup_tv( this.tv )
 		previous_state = this.redis.get_state()
 		result = {
 			"route": "/streamdeck/5" ,
 			"result": "success" ,
-			"previous_state": previous_state
+			"previous_state": previous_state ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		this.log( e )
@@ -123,11 +133,13 @@ async def six( request ):
 	try:
 		if verify_token( request , this.config.personal.streamdeck_route_token ) == False:
 			return json_result( result )
+		tv_setup_result = utils.setup_tv( this.tv )
 		previous_state = this.redis.get_state()
 		result = {
 			"route": "/streamdeck/6" ,
 			"result": "success" ,
-			"previous_state": previous_state
+			"previous_state": previous_state ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		this.log( e )

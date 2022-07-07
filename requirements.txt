@@ -1,0 +1,12 @@
+ADBWrapper==0.0.6
+imagehash==4.2.1
+imgcompare==2.0.1
+Pillow==9.1.1
+pytz==2022.1
+PyYAML==6.0
+redis==4.3.3
+redis_circular_list==0.0.4
+requests==2.28.0
+sanic==22.3.2
+stackprinter==0.2.6
+tqdm==4.64.0

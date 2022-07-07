@@ -5,6 +5,8 @@ from RedisWrapper import RedisWrapper
 from box import Box
 from pytz import timezone
 
+from LGTVController import LGTVController
+
 from sanic import Sanic
 from sanic.response import json as sanic_json
 from sanic import response
@@ -51,6 +53,7 @@ class C2Server:
 			self.config.time_zone = timezone( self.config.redis.time_zone )
 			utils.setup_signal_handlers( self.on_signal_interrupt )
 			self.redis = RedisWrapper( self.config.redis )
+			self.tv = LGTVController( self.config.tv )
 			print( self.config )
 			utils.store_config_in_db( self.config , self.redis )
 		except Exception as e:

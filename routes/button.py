@@ -18,26 +18,23 @@ import state_functions.twitch as twitch
 # 	this = utils.get_server_context()
 # 	return sanic_response.text( "you found the button main endpoint !!\n" )
 
+# TODO : Decode which uri we want ? or leave as generic uri open ?
 async def uri( request ):
 	result = {}
 	if "uri" not in request.args:
-		return json_result( result )
+		return json_result( { "failed" : "no uri sent in request" } )
 	if len( request.args ) != 1:
-		return json_result( result )
+		return json_result( { "failed" : "no uri sent in request" } )
 	uri = request.args[ "uri" ][ 0 ]
 	this = utils.get_server_context()
 	try:
-		current_state = this.redis.get_state()
-		if "name" not in current_state:
-			return json_result( result )
-		module_name = f"state_functions.{current_state[ 'name' ]}"
-		if module_name not in sys.modules:
-			return json_result( result )
-		current_state = sys.modules[ module_name ].uri( this , uri )
+		tv_setup_result = utils.setup_tv( this.tv )
+		start_result = twitch.play_next_live_follower( this )
 		result = {
 			"route": "/uri" ,
-			"result": "success" ,
-			"current_state": current_state
+			"state_function": "button.uri" ,
+			"result": start_result ,
+			"tv_result": tv_setup_result
 		}
 	except Exception as e:
 		print( e )

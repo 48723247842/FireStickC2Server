@@ -34,7 +34,13 @@ class RedisWrapper:
 		self.redis.set( f"{self.config.prefix}.STATE" , json.dumps( state_object ) )
 
 	def get_state( self ):
-		return json.loads( self.redis.get( f"{self.config.prefix}.STATE" ) )
+		state = self.redis.get( f"{self.config.prefix}.STATE" )
+		result = {}
+		try:
+			result = json.loads( state )
+		except Exception as e:
+			pass
+		return result
 
 	def push_state_list( self , state_object ):
 		list_key = f"{self.config.prefix}.STATE_LIST"

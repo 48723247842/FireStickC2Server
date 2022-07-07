@@ -13,7 +13,6 @@ from pprint import pprint
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 
-
 # https://github.com/0187773933/PowerPointInteractiveGamesGenerator/blob/ec49a26e6aae66fadda40ffa3b74a2e5e6f6e6e3/utils.py
 # https://github.com/0187773933/RaspiCameraMotionTrackerFrameConsumer/blob/master/frame_consumer.py
 
@@ -63,11 +62,11 @@ def get_server_context():
 	return False
 
 def difference_between_two_images( pil_image_1 , pil_image_2 ):
-	# pil_image_1_hash = imagehash.phash( pil_image_1 )
-	# pil_image_2_hash = imagehash.phash( pil_image_2 )
-	# difference = ( pil_image_1_hash - pil_image_2_hash )
-	# return difference
-	return imgcompare.image_diff_percent( pil_image_1 , pil_image_2 )
+	pil_image_1_hash = imagehash.phash( pil_image_1 )
+	pil_image_2_hash = imagehash.phash( pil_image_2 )
+	difference = ( pil_image_1_hash - pil_image_2_hash )
+	return difference
+	# return imgcompare.image_diff_percent( pil_image_1 , pil_image_2 )
 
 # options = {
 # 	"adb": adb_object ,
@@ -223,7 +222,14 @@ def store_config_in_db( config , redis ):
 		redis.redis.rename( disney_videos_currated_random_watched_temp_key , disney_videos_currated_random_key )
 
 
-
+def setup_tv( tv_controller ):
+	try:
+		tv_controller.set_input( "HDMI_1" )
+		tv_controller.set_volume( 11 )
+		return True
+	except Exception as e:
+		print( e )
+		return False
 
 
 

@@ -1,0 +1,6 @@
+{
+    "id": "<class 'type'>_1",
+    "type": "request",
+    "uri": "ssap://com.webos.applicationManager/listLaunchPoints",
+    "payload": {}
+}
