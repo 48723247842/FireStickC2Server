@@ -2,6 +2,7 @@
 function is_int() { return $(test "$@" -eq "$@" > /dev/null 2>&1); }
 ssh-add -D || sudo pkill -9 ssh-agent && eval `ssh-agent -s` && ssh-add -D
 git init
+git remote remove origin
 git config --global --unset user.name
 git config --global --unset user.email
 git config user.name "48723247842"
