@@ -16,6 +16,7 @@ git config user.name "48723247842"
 git config user.email "48723247842@protonmail.com"
 # ssh-add -k /Users/morpheous/Tresors/Misc/SSH2/KEYS/48723247842_Github
 ssh-add -k /home/morphs/.ssh/48723247842_Github
+ssh -vT git@github.com
 
 LastCommit=$(git log -1 --pretty="%B" | xargs)
 # https://stackoverflow.com/a/3626205
