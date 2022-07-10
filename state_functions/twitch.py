@@ -204,7 +204,7 @@ def one_hot_is_user_live( options ):
 def get_live_users_currated( config ):
 	batch_option_list = [ [ x , config.apps.twitch.personal.client_id , config.apps.twitch.personal.oauth_token ] for x in config.apps.twitch.following.currated ]
 	results = utils.batch_process({
-		"max_workers": 5 ,
+		"max_workers": 10 ,
 		"batch_list": batch_option_list ,
 		"function_reference": one_hot_is_user_live
 	})
@@ -217,8 +217,13 @@ def update_currated_live_users( c2 ):
 	live_currated_following_key = f"{c2.config.redis.prefix}.APPS.TWITCH.FOLLOWING.CURRATED"
 	live_currated_following = get_live_users_currated( c2.config )
 	c2.redis.redis.delete( live_currated_following_key )
+
+	pipeline = c2.redis.redis.pipeline()
 	for i , x in enumerate( live_currated_following ):
-		c2.redis.redis.rpush( live_currated_following_key , x )
+		# c2.redis.redis.rpush( live_currated_following_key , x )
+		pipeline.rpush( live_currated_following_key , x )
+	pipeline.execute()
+
 	return live_currated_following
 
 def play_next_live_follower( c2 ):
@@ -229,12 +234,16 @@ def play_next_live_follower( c2 ):
 
 		live_currated_following_key = f"{c2.config.redis.prefix}.APPS.TWITCH.FOLLOWING.CURRATED"
 		if previous_state[ "name" ] != "twitch":
-			update_currated_live_users( c2 )
+			# update_currated_live_users( c2 )
+			c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , 0 )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		else:
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
+
 		if next_live_user == False:
+			print( "Next Live User was FALSE , Updating again" )
 			update_currated_live_users( c2 )
+			c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , 0 )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		if next_live_user == False:
 			print( "None of Currated Users are Online !!" )
@@ -250,6 +259,7 @@ def play_next_live_follower( c2 ):
 		# uri = f"twitch://channel/{next_live_user}"
 		uri = f"twitch://stream/{next_live_user}"
 		print( f"ADB :: Launching :: {uri}" )
+
 		adb.open_uri( uri )
 		new_adb_status = adb.get_status()
 

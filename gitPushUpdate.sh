@@ -1,5 +1,12 @@
 #!/bin/bash
 function is_int() { return $(test "$@" -eq "$@" > /dev/null 2>&1); }
+
+# reset git on new vps box ???
+# ssh-add -D || sudo pkill -9 ssh-agent && eval `ssh-agent -s` && ssh-add -D
+# ssh-add -k /home/morphs/.ssh/48723247842_Github
+# ssh -vT git@github.com
+# then you can proceed as normal ?
+
 ssh-add -D || sudo pkill -9 ssh-agent && eval `ssh-agent -s` && ssh-add -D
 git init
 git remote remove origin
