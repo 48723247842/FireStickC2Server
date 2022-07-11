@@ -370,7 +370,7 @@ def play_next_currated_playlist( c2 ):
 		print( f"ADB :: Launching :: {uri}" )
 		adb.open_uri( uri )
 		new_adb_status = adb.get_status()
-		_enable_shuffle( adb )
+		# _enable_shuffle( adb )
 		adb.press_key( 87 ) # press media 'next' key to start shuffle
 		new_state = {
 			"name": "spotify" ,

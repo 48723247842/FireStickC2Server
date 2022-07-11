@@ -235,7 +235,9 @@ def play_next_live_follower( c2 ):
 		live_currated_following_key = f"{c2.config.redis.prefix}.APPS.TWITCH.FOLLOWING.CURRATED"
 		if previous_state[ "name" ] != "twitch":
 			# update_currated_live_users( c2 )
-			c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , 0 )
+			print( "DEBUG === Previous State was != Twitch , Resetting Index to 0" )
+			# c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , "0" )
+			c2.redis.redis.delete( f"{live_currated_following_key}.INDEX" )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		else:
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
@@ -243,7 +245,8 @@ def play_next_live_follower( c2 ):
 		if next_live_user == False:
 			print( "Next Live User was FALSE , Updating again" )
 			update_currated_live_users( c2 )
-			c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , 0 )
+			# c2.redis.redis.set( f"{live_currated_following_key}.INDEX" , "0" )
+			c2.redis.redis.delete( f"{live_currated_following_key}.INDEX" )
 			next_live_user = redis_circular_list.next( c2.redis.redis , live_currated_following_key )
 		if next_live_user == False:
 			print( "None of Currated Users are Online !!" )
