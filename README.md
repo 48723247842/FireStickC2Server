@@ -9,3 +9,13 @@
 ```
 while true ; do curl http://localhost:9371/state/check & sleep 5; done
 ```
+
+### Refresh Twitch OAuth Code , Valid for 60 Days
+
+https://dev.twitch.tv/docs/authentication/getting-tokens-oauth
+
+```
+curl -X POST 'https://id.twitch.tv/oauth2/token' \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+-d 'client_id=<your client id goes here>&client_secret=<your client secret goes here>&grant_type=client_credentials'
+```

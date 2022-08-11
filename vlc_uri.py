@@ -16,8 +16,7 @@ if __name__ == "__main__":
 	tv_controller.set_volume( 11 )
 
 	adb = ADBWrapper( { "ip": config.adb.ip , "port": config.adb.port } )
-	# uri = f"twitch://stream/{next_live_user}"
-	uri = f"twitch://stream/{sys.argv[ 1 ]}"
+	uri = f"vlc://{sys.argv[ 1 ]}"
 	print( f"ADB :: Launching :: {uri}" )
 	adb.open_uri( uri )
 	new_adb_status = adb.get_status()

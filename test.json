@@ -1,0 +1,104 @@
+{
+    "data": [
+        {
+            "id": "41102431115",
+            "user_id": "408679510",
+            "user_login": "jessu",
+            "user_name": "Jessu",
+            "game_id": "26936",
+            "game_name": "Music",
+            "type": "live",
+            "title": "BOOMER NIGHT ♪ Dad music all night looooong ♬",
+            "viewer_count": 1674,
+            "started_at": "2022-08-11T00:35:08Z",
+            "language": "en",
+            "thumbnail_url": "https://static-cdn.jtvnw.net/previews-ttv/live_user_jessu-{width}x{height}.jpg",
+            "tag_ids": [
+                "6ea6bca4-4712-4ab9-a906-e3336a9d8039",
+                "d81d54c8-d705-4df6-aaf0-01d715c1dbcc",
+                "2193eee1-b8f0-43bd-a6d9-dba8a67528a1"
+            ],
+            "is_mature": false
+        },
+        {
+            "id": "41101292139",
+            "user_id": "29899360",
+            "user_login": "staysafetv",
+            "user_name": "StaysafeTV",
+            "game_id": "18122",
+            "game_name": "World of Warcraft",
+            "type": "live",
+            "title": "🔴GETTING 70 ON BOOMKIN TODAY--INSANE TITLE FARMING--BUY POWER GUM--!gum",
+            "viewer_count": 1065,
+            "started_at": "2022-08-10T19:20:29Z",
+            "language": "en",
+            "thumbnail_url": "https://static-cdn.jtvnw.net/previews-ttv/live_user_staysafetv-{width}x{height}.jpg",
+            "tag_ids": [
+                "6ea6bca4-4712-4ab9-a906-e3336a9d8039"
+            ],
+            "is_mature": true
+        },
+        {
+            "id": "41100606027",
+            "user_id": "277624494",
+            "user_login": "dashducks",
+            "user_name": "DashDucks",
+            "game_id": "272263131",
+            "game_name": "Animals, Aquariums, and Zoos",
+            "type": "live",
+            "title": "Enjoy our Peaceful Vibes and Ducktacular Views! !perks",
+            "viewer_count": 359,
+            "started_at": "2022-08-10T13:30:17Z",
+            "language": "en",
+            "thumbnail_url": "https://static-cdn.jtvnw.net/previews-ttv/live_user_dashducks-{width}x{height}.jpg",
+            "tag_ids": [
+                "6ea6bca4-4712-4ab9-a906-e3336a9d8039",
+                "e90b5f6e-4c6e-4003-885b-4d0d5adeb580"
+            ],
+            "is_mature": false
+        },
+        {
+            "id": "41100605787",
+            "user_id": "269099597",
+            "user_login": "ourchickenlife",
+            "user_name": "OurChickenLife",
+            "game_id": "272263131",
+            "game_name": "Animals, Aquariums, and Zoos",
+            "type": "live",
+            "title": "MissF and BabIES on full screen over on > !specialevent !hatchnews",
+            "viewer_count": 97,
+            "started_at": "2022-08-10T13:30:12Z",
+            "language": "en",
+            "thumbnail_url": "https://static-cdn.jtvnw.net/previews-ttv/live_user_ourchickenlife-{width}x{height}.jpg",
+            "tag_ids": [
+                "6ea6bca4-4712-4ab9-a906-e3336a9d8039",
+                "e90b5f6e-4c6e-4003-885b-4d0d5adeb580"
+            ],
+            "is_mature": false
+        },
+        {
+            "id": "40052691305",
+            "user_id": "142915097",
+            "user_login": "auroralgames",
+            "user_name": "AuroralGames",
+            "game_id": "1469308723",
+            "game_name": "Software and Game Development",
+            "type": "live",
+            "title": "[UE5] [GAMEDEV] | Platform Adventure - 2.1.0 Update | !games !feedback !trailer | SPONSORED STREAM !raid #ad",
+            "viewer_count": 13,
+            "started_at": "2022-08-11T01:19:05Z",
+            "language": "en",
+            "thumbnail_url": "https://static-cdn.jtvnw.net/previews-ttv/live_user_auroralgames-{width}x{height}.jpg",
+            "tag_ids": [
+                "6ea6bca4-4712-4ab9-a906-e3336a9d8039",
+                "bfedff64-c53a-4e6f-bda4-9eeb36dc8853",
+                "f588bd74-e496-4d11-9169-3597f38a5d25",
+                "a59f1e4e-257b-4bd0-90c7-189c3efbf917",
+                "85a78d1f-77e7-468e-a3e5-76ed7c99864b",
+                "6f86127d-6051-4a38-94bb-f7b475dde109"
+            ],
+            "is_mature": false
+        }
+    ],
+    "pagination": {}
+}
